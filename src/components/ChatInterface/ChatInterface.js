@@ -19,8 +19,8 @@ function ChatInterface() {
   const handleSendMessage = async (text) => {
     if (!text.trim() || isLoading) return;
 
-    const newMessage = { 
-      type: 'user', 
+    const newMessage = {
+      type: 'user',
       content: { text }
     };
     setMessages(prev => [...prev, newMessage]);
@@ -31,42 +31,42 @@ function ChatInterface() {
       switch (chatType) {
         case CHAT_TYPES.DIALOG:
           response = await sendDialog(text);
-          setMessages(prev => [...prev, { 
-            type: 'bot', 
+          setMessages(prev => [...prev, {
+            type: 'bot',
             content: { text: response.response }
           }]);
           break;
 
         case CHAT_TYPES.TRY_SAYING:
           response = await getTrySaying(text);
-          setMessages(prev => [...prev, { 
-            type: 'bot', 
+          setMessages(prev => [...prev, {
+            type: 'bot',
             content: { text: `💡 ${response.example_response}` }
           }]);
           break;
 
         case CHAT_TYPES.TRANSCRIPT:
           response = await getTranscriptReview(text);
-          setMessages(prev => [...prev, { 
-            type: 'bot', 
+          setMessages(prev => [...prev, {
+            type: 'bot',
             content: { text: `📝 ${response.review}` }
           }]);
           break;
 
         case CHAT_TYPES.TRANSLATE:
           response = await translate(text, targetLanguage);
-          setMessages(prev => [...prev, { 
-            type: 'bot', 
+          setMessages(prev => [...prev, {
+            type: 'bot',
             content: { text: `🌐 ${response.translation}` }
           }]);
           break;
       }
     } catch (error) {
       console.error('Error:', error);
-      const errorMessage = error.response?.data?.detail || 
+      const errorMessage = error.response?.data?.detail ||
         'Server connection error. Please try again.';
-      setMessages(prev => [...prev, { 
-        type: 'bot', 
+      setMessages(prev => [...prev, {
+        type: 'bot',
         content: { text: `❌ Error: ${errorMessage}` }
       }]);
     } finally {
@@ -90,7 +90,7 @@ function ChatInterface() {
               </button>
             ))}
           </div>
-          
+
           {chatType === CHAT_TYPES.TRANSLATE && (
             <select
               value={targetLanguage}
@@ -98,14 +98,20 @@ function ChatInterface() {
               className="language-select"
             >
               <option value="English">English</option>
+              <option value="Spanish">Spanish</option>
+              <option value="French">French</option>
+              <option value="German">German</option>
+              <option value="Italian">Italian</option>
+              <option value="Portuguese">Portuguese</option>
               <option value="Japanese">Japanese</option>
               <option value="Chinese">Chinese</option>
+              <option value="Korean">Korean</option>
             </select>
           )}
-          
+
           <div className="input-container">
-            <ChatInput 
-              onSendMessage={handleSendMessage} 
+            <ChatInput
+              onSendMessage={handleSendMessage}
               isLoading={isLoading}
               placeholder={getChatPlaceholder(chatType)}
             />
